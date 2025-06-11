@@ -1,0 +1,19 @@
+{
+    "entryPoints": [
+      "packages/burn/src/index.ts",
+      "packages/clmm/src/index.ts",
+      "packages/common/src/index.ts",
+      "packages/dca/src/index.ts",
+      "packages/farms/src/index.ts",
+      "packages/launchpad/src/index.ts",
+      "packages/limit/src/index.ts",
+      "packages/vaults/src/index.ts",
+      "packages/xcetus/src/index.ts",
+      "packages/zap/src/index.ts"
+    ],
+    "out": "docs",
+    "tsconfig": "tsconfig.json",
+    "name": "Cetus SDK Documentation",
+    "includeVersion": true,
+    "excludePrivate": true 
+  }

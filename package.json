@@ -1,0 +1,80 @@
+{
+  "name": "cetus-sui-ts-sdk",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types",
+    "docs": "typedoc",
+    "test": "node --no-warnings --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "jest --watch",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "prepare": "husky",
+    "publish_test:all": "node scripts/version.js all && for pkg in packages/*; do (cd $pkg && pnpm run publish_batch:test && sleep 1); done",
+    "update-peer-deps": "node scripts/update-peer-deps.js"
+  },
+  "dependencies": {
+    "@cetusprotocol/aggregator-sdk": "0.12.0",
+    "@mysten/sui": "1.29.1",
+    "@suchipi/femver": "^1.0.0",
+    "@types/bn.js": "^5.1.1",
+    "axios": "^1.4.0",
+    "bn.js": "^5.2.1",
+    "cors": "^2.8.5",
+    "decimal.js": "^10.4.1",
+    "isomorphic-fetch": "^3.0.0",
+    "js-base64": "^3.7.4",
+    "js-sha3": "^0.8.0",
+    "superstruct": "^1.0.3",
+    "tiny-invariant": "^1.1.0",
+    "tweetnacl": "^1.0.3",
+    "uuid": "^9.0.0",
+    "valibot": "0.36.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@types/cors": "^2.8.13",
+    "@types/jest": "^29.5.14",
+    "@types/lossless-json": "^1.0.1",
+    "@types/node": "^22.13.14",
+    "@types/uuid": "^9.0.2",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "bip39-light": "^1.0.7",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.22.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-circus": "^29.7.0",
+    "jest-runner": "^29.7.0",
+    "lint-staged": "^15.5.0",
+    "prettier": "^3.5.3",
+    "standard-version": "^9.5.0",
+    "ts-jest": "^29.2.6",
+    "tslib": "^2.8.1",
+    "tsup": "^8.4.0",
+    "turbo": "^2.4.4",
+    "typedoc": "^0.28.0",
+    "typescript": "5.8.2"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "/": "pnpm run lint:fix"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "target": "es2020",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "types": ["node", "jest"],
+    "lib": ["esnext", "ES6", "DOM"],
+    "noUnusedLocals": false,
+    "strict": true,
+    "rootDir": "./",
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "paths": {},
+    "outDir": "dist/",
+    "declaration": true,
+    "declarationDir": "dist",
+    "allowSyntheticDefaultImports": true,
+    "traceResolution": true
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}
