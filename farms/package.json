@@ -1,0 +1,38 @@
+{
+  "name": "@cetusprotocol/farms-sdk",
+  "version": "1.1.3",
+  "description": "SDK for cetus farms",
+  "typings": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint src/*.ts src/**/*.ts",
+    "lint:fix": "eslint src/*.ts src/**/*.ts --fix",
+    "build": "pnpm run build:tsup",
+    "testbuild": "tsc",
+    "build:tsup": "pnpm run build:clean && npm run _build:node",
+    "build:clean": "rm -rf dist",
+    "_build:node": "tsup --format cjs,esm --dts",
+    "build:doc": "npx typedoc",
+    "publish_batch:test": "npm publish --tag experimental",
+    "publish:test": "node ../../scripts/version.js farms && npm publish --tag experimental"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [],
+  "author": "test",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@cetusprotocol/common-sdk": "workspace:*",
+    "@cetusprotocol/sui-clmm-sdk": "workspace:*",
+    "@cetusprotocol/test-utils": "workspace:*"
+  },
+  "peerDependencies": {
+    "@cetusprotocol/common-sdk": "*",
+    "@cetusprotocol/sui-clmm-sdk": "*",
+    "@mysten/sui": ">=1.29.1"
+  }
+}
