@@ -88,7 +88,7 @@ sdk.updateFullRpcUrl(new_rpc_url)
    - `fixed_amount`: Fixed amount to deposit
    - `fixed_coin_a`: Boolean indicating whether to fix coin A (true) or coin B (false)
 
-2. **FlexibleBoth**
+2. **FlexibleBoth** (This feature will be supported in a future release, currently a placeholder)
 
    - `coin_amount_a`: Amount of coin A to deposit
    - `coin_amount_b`: Amount of coin B to deposit

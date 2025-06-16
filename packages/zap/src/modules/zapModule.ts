@@ -290,7 +290,11 @@ export class ZapModule implements IModule<CetusZapSDK> {
 
     // FlexibleBoth mode
     if (mode === 'FlexibleBoth') {
-      return await this.buildDepositFlexibleBothPayload(options, tx)
+      // return await this.buildDepositFlexibleBothPayload(options, tx)
+      return handleMessageError(ZapErrorCode.UnsupportedDepositMode, `Unsupported deposit mode: ${mode}`, {
+        [DETAILS_KEYS.REQUEST_PARAMS]: options,
+        [DETAILS_KEYS.METHOD_NAME]: 'buildDepositPayload',
+      }) as never
     }
 
     // OnlyCoinA or OnlyCoinB mode
