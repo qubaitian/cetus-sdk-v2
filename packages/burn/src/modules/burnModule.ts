@@ -270,7 +270,7 @@ export class BurnModule implements IModule<CetusBurnSDK> {
    * @param tx - The transaction object.
    * @returns
    */
-  crateCollectRewardPayload(params: CollectRewardParams, tx?: Transaction) {
+  createCollectRewardPayload(params: CollectRewardParams, tx?: Transaction) {
     tx = tx || new Transaction()
 
     const { burn } = this._sdk.sdkOptions
@@ -354,7 +354,7 @@ export class BurnModule implements IModule<CetusBurnSDK> {
    * @param tx - The transaction object.
    * @returns
    */
-  crateCollectRewardsPayload(params: CollectRewardParams[], tx?: Transaction) {
+  createCollectRewardsPayload(params: CollectRewardParams[], tx?: Transaction) {
     tx = tx || new Transaction()
 
     const { burn } = this._sdk.sdkOptions

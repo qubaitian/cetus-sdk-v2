@@ -192,7 +192,7 @@ let tx = sdk.Burn.createCollectFeePayload({
   account,
 })
 
-tx = sdk.Burn.crateCollectRewardPayload({
+tx = sdk.Burn.createCollectRewardPayload({
   pool_id,
   pos_id,
   coin_type_a,
@@ -226,7 +226,7 @@ let tx = sdk.Burn.createCollectFeesPayload([{
   account,
 }, ...])
 
-tx = sdk.Burn.crateCollectRewardsPayload([{
+tx = sdk.Burn.createCollectRewardsPayload([{
   pool_id,
   pos_id,
   coin_type_a,

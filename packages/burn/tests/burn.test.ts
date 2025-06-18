@@ -72,7 +72,7 @@ describe('burn', () => {
       account,
     })
 
-    txb = sdk.Burn.crateCollectRewardPayload({
+    txb = sdk.Burn.createCollectRewardPayload({
       pool_id: poolId,
       pos_id: posId,
       coin_type_a: coinTypeA,

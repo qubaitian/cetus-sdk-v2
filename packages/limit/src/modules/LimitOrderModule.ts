@@ -155,7 +155,6 @@ export class LimitOrderModule implements IModule<CetusLimitOrderSDK> {
         },
       })
     }
-    return indexer_id
   }
 
   public buildGetUserIndexerHandle(owner_address: string, tx?: Transaction) {
@@ -362,18 +361,20 @@ export class LimitOrderModule implements IModule<CetusLimitOrderSDK> {
   async placeLimitOrder(params: PlaceLimitOrderParams): Promise<Transaction> {
     const { limit_order } = this._sdk.sdkOptions
     const { user_orders_indexer_id, global_config_id, rate_orders_indexer_id } = getPackagerConfigs(limit_order)
+    let indexerId: string | undefined
+    try {
+      indexerId = await this.getPoolIndexerId(params.pay_coin_type, params.target_coin_type)
+    } catch (error) {
+      indexerId = undefined
+    }
     try {
       const coinAssets = await this._sdk.FullClient.getOwnerCoinAssets(this._sdk.getSenderAddress(), params.pay_coin_type)
       const tx = new Transaction()
-
-      const indexerId = await this.getPoolIndexerId(params.pay_coin_type, params.target_coin_type)
-
       const payCoinObj = CoinAssist.buildCoinForAmount(tx, coinAssets, BigInt(params.pay_coin_amount), params.pay_coin_type, false, true)
 
       tx.moveCall({
-        target: `${limit_order.published_at}::limit_order::${
-          indexerId === undefined ? 'create_indexer_and_place_limit_order' : 'place_limit_order'
-        }`,
+        target: `${limit_order.published_at}::limit_order::${indexerId === undefined ? 'create_indexer_and_place_limit_order' : 'place_limit_order'
+          }`,
         typeArguments: [params.pay_coin_type, params.target_coin_type],
         arguments: [
           tx.object(global_config_id),
