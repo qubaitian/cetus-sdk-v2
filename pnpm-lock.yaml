@@ -267,28 +267,6 @@ importers:
         specifier: workspace:*
         version: link:../test-utils
 
-  packages/zap:
-    dependencies:
-      '@cetusprotocol/aggregator-sdk':
-        specifier: '>=0.12.0'
-        version: 0.12.0(@jest/transform@29.7.0)(@jest/types@29.6.3)(esbuild@0.25.4)(typescript@5.8.2)
-      '@mysten/sui':
-        specifier: '>=1.29.1'
-        version: 1.29.1(typescript@5.8.2)
-    devDependencies:
-      '@cetusprotocol/common-sdk':
-        specifier: workspace:*
-        version: link:../common
-      '@cetusprotocol/farms-sdk':
-        specifier: workspace:*
-        version: link:../farms
-      '@cetusprotocol/sui-clmm-sdk':
-        specifier: workspace:*
-        version: link:../clmm
-      '@cetusprotocol/test-utils':
-        specifier: workspace:*
-        version: link:../test-utils
-
 packages:
 
   '@0no-co/graphql.web@1.1.2':
