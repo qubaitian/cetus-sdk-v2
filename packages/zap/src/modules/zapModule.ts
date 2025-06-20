@@ -290,11 +290,11 @@ export class ZapModule implements IModule<CetusZapSDK> {
 
     // FlexibleBoth mode
     if (mode === 'FlexibleBoth') {
-      // return await this.buildDepositFlexibleBothPayload(options, tx)
-      return handleMessageError(ZapErrorCode.UnsupportedDepositMode, `Unsupported deposit mode: ${mode}`, {
-        [DETAILS_KEYS.REQUEST_PARAMS]: options,
-        [DETAILS_KEYS.METHOD_NAME]: 'buildDepositPayload',
-      }) as never
+      return await this.buildDepositFlexibleBothPayload(options, tx)
+      // return handleMessageError(ZapErrorCode.UnsupportedDepositMode, `Unsupported deposit mode: ${mode}`, {
+      //   [DETAILS_KEYS.REQUEST_PARAMS]: options,
+      //   [DETAILS_KEYS.METHOD_NAME]: 'buildDepositPayload',
+      // }) as never
     }
 
     // OnlyCoinA or OnlyCoinB mode
@@ -631,56 +631,52 @@ export class ZapModule implements IModule<CetusZapSDK> {
     let coinInputB
 
     // Handle remaining amount with swap and add liquidity
-    if (sub_deposit_result !== undefined) {
-      const { amount_a, amount_b, fixed_liquidity_coin_a, mode, swap_result } = sub_deposit_result!
-      const isOnlyCoinA = mode === 'OnlyCoinA'
-      const { swap_in_amount, route_obj } = swap_result!
-
-      if (isOnlyCoinA) {
-        coinInputA = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_a, [
-          BigInt(swap_in_amount),
-          BigInt(fixed_amount_a),
-          BigInt(amount_a),
-        ])
-        coinInputB = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_b, [BigInt(fixed_amount_b)])
-      } else {
-        coinInputA = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_a, [BigInt(fixed_amount_a)])
-        coinInputB = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_b, [
-          BigInt(swap_in_amount),
-          BigInt(amount_b),
-          BigInt(fixed_amount_b),
-        ])
-      }
-
-      const swapCoinObject = CoinAssist.getCoinAmountObjId(isOnlyCoinA ? coinInputA : coinInputB, swap_in_amount)
-
-      // Configure and execute the swap via router
-      const routerParamsV2: BuildRouterSwapParamsV2 = {
-        routers: route_obj,
-        slippage: swap_slippage,
-        txb: tx,
-        inputCoin: swapCoinObject,
-      }
-      const swap_out_coin = await this._sdk.AggregatorClient.fixableRouterSwap(routerParamsV2)
-
-      const primaryCoinAInputs = isOnlyCoinA ? CoinAssist.getCoinAmountObjId(coinInputA, amount_a) : swap_out_coin
-      const primaryCoinBInputs = isOnlyCoinA ? swap_out_coin : CoinAssist.getCoinAmountObjId(coinInputB, amount_b)
-
-      // Add liquidity
-      await this.buildAddLiquidityPayload(
-        options,
-        posId,
-        fixed_liquidity_coin_a ? fixed_amount_a : '999999999999999',
-        fixed_liquidity_coin_a ? '999999999999999' : fixed_amount_b,
-        primaryCoinAInputs,
-        primaryCoinBInputs,
-        tx,
-        isOpenPosition
-      )
-    } else {
-      coinInputA = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_a, [BigInt(fixed_amount_a)])
-      coinInputB = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_b, [BigInt(fixed_amount_b)])
+    // if (sub_deposit_result !== undefined) {
+    if (sub_deposit_result === undefined) {
+      return handleMessageError(ZapErrorCode.UnsupportedDepositMode, `sub_deposit_result is undefined`, {
+        [DETAILS_KEYS.REQUEST_PARAMS]: options,
+        [DETAILS_KEYS.METHOD_NAME]: 'buildDepositFlexibleBothPayload',
+      }) as never
     }
+    const { amount_a: amount_a_inner, amount_b: amount_b_inner, fixed_liquidity_coin_a: fixed_liquidity_coin_a_inner, mode, swap_result } = sub_deposit_result!
+    const isOnlyCoinA = mode === 'OnlyCoinA'
+    const { swap_in_amount, swap_out_amount, route_obj } = swap_result!
+    console.log('🚀 ~ ZapModule ~ buildDepositFlexibleBothPayload ~ swap_result:', swap_result);
+    if (isOnlyCoinA) {
+      console.log('🚀 ~ ZapModule ~ buildDepositFlexibleBothPayload ~ swap_in_amount:', swap_in_amount);
+      console.log('🚀 ~ ZapModule ~ buildDepositFlexibleBothPayload ~ amount_a_inner:', amount_a_inner);
+      console.log('🚀 ~ ZapModule ~ buildDepositFlexibleBothPayload ~ fixed_amount_a:', fixed_amount_a);
+      coinInputA = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_a, [
+        BigInt(swap_in_amount),
+        BigInt(fixed_amount_a),
+        BigInt(amount_a_inner),
+      ])
+      coinInputB = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_b, [BigInt(fixed_amount_b)])
+    } else {
+      console.log('🚀 ~ ZapModule ~ buildDepositFlexibleBothPayload ~ swap_in_amount:', swap_in_amount);
+      console.log('🚀 ~ ZapModule ~ buildDepositFlexibleBothPayload ~ amount_b_inner:', amount_b_inner);
+      console.log('🚀 ~ ZapModule ~ buildDepositFlexibleBothPayload ~ fixed_amount_b:', fixed_amount_b);
+      coinInputA = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_a, [BigInt(fixed_amount_a)])
+      coinInputB = CoinAssist.buildMultiCoinInput(tx, allCoinAsset, coin_type_b, [
+        BigInt(swap_in_amount),
+        BigInt(amount_b_inner),
+        BigInt(fixed_amount_b),
+      ])
+    }
+
+    const swapCoinObject = CoinAssist.getCoinAmountObjId(isOnlyCoinA ? coinInputA : coinInputB, swap_in_amount)
+
+    // Configure and execute the swap via router
+    const routerParamsV2: BuildRouterSwapParamsV2 = {
+      routers: route_obj,
+      slippage: swap_slippage,
+      txb: tx,
+      inputCoin: swapCoinObject,
+    }
+    const swap_out_coin = await this._sdk.AggregatorClient.fixableRouterSwap(routerParamsV2)
+
+    const primaryCoinAInputs_inner = isOnlyCoinA ? CoinAssist.getCoinAmountObjId(coinInputA, amount_a_inner) : swap_out_coin
+    const primaryCoinBInputs_inner = isOnlyCoinA ? swap_out_coin : CoinAssist.getCoinAmountObjId(coinInputB, amount_b_inner)
 
     // Collect rewards
     if (!isOpenPosition) {
@@ -702,11 +698,16 @@ export class ZapModule implements IModule<CetusZapSDK> {
     // Add liquidity
     const primaryCoinAInputs = CoinAssist.getCoinAmountObjId(coinInputA, fixed_amount_a)
     const primaryCoinBInputs = CoinAssist.getCoinAmountObjId(coinInputB, fixed_amount_b)
+
+    tx.mergeCoins(primaryCoinAInputs, [primaryCoinAInputs_inner])
+    tx.mergeCoins(primaryCoinBInputs, [primaryCoinBInputs_inner])
+
+    deposit_obj.fixed_liquidity_coin_a = !deposit_obj.fixed_liquidity_coin_a
     await this.buildAddLiquidityPayload(
       options,
       posId,
-      fixed_amount_a,
-      fixed_amount_b,
+      (Number(fixed_amount_a) + Number(amount_a_inner)).toFixed(0),
+      (Number(fixed_amount_b) + Number(amount_b_inner)).toFixed(0),
       primaryCoinAInputs,
       primaryCoinBInputs,
       tx,

@@ -2,7 +2,7 @@ import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const privateKey = process.env.SUI_WALLET_MNEMONICS
+const privateKey = process.env.SUI_WALLET_PRIVATE_KEY
 
 /**
  * Build a test account using the mnemonic phrase from environment variables
@@ -10,14 +10,7 @@ const privateKey = process.env.SUI_WALLET_MNEMONICS
  * @returns Ed25519Keypair instance
  */
 export function buildTestAccount(): Ed25519Keypair {
-  try {
-    const test_account_object = Ed25519Keypair.deriveKeypair(privateKey as string)
-    console.log(' Address: ', test_account_object.getPublicKey().toSuiAddress())
-    return test_account_object
-  } catch (error) {
-    console.log('🚀 ~ buildTestAccount ~ error:', error)
     const test_account_object = Ed25519Keypair.fromSecretKey(privateKey as string)
     console.log(' Address: ', test_account_object.getPublicKey().toSuiAddress())
     return test_account_object
-  }
 }
