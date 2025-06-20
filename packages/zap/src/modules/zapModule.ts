@@ -702,7 +702,6 @@ export class ZapModule implements IModule<CetusZapSDK> {
     tx.mergeCoins(primaryCoinAInputs, [primaryCoinAInputs_inner])
     tx.mergeCoins(primaryCoinBInputs, [primaryCoinBInputs_inner])
 
-    deposit_obj.fixed_liquidity_coin_a = !deposit_obj.fixed_liquidity_coin_a
     await this.buildAddLiquidityPayload(
       options,
       posId,
