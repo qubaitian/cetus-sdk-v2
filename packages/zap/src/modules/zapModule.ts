@@ -624,8 +624,8 @@ export class ZapModule implements IModule<CetusZapSDK> {
     const isOverRange = d(amount_a).eq(0) || d(amount_b).eq(0)
     const allCoinAsset = await this._sdk.FullClient.getOwnerCoinAssets(this.sdk.getSenderAddress())
 
-    const fixed_amount_a = isOverRange ? amount_a : fixed_liquidity_coin_a ? amount_a : amount_limit_a
-    const fixed_amount_b = isOverRange ? amount_b : fixed_liquidity_coin_a ? amount_b : amount_limit_b
+    const fixed_amount_a = amount_a
+    const fixed_amount_b = amount_b
 
     let coinInputA
     let coinInputB
